@@ -1,39 +1,12 @@
-import { useState } from 'react';
 import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import CalcView from './src/components/CalcView';
 import Keypad from './src/components/Keypad';
-import { calculate } from './src/includes/calculator';
-import { Audio } from 'expo-av';
+
 import { StatusBar } from 'expo-status-bar';
+import { useCalc } from './src/hooks/useCalc';
 
 export default function App() {
-  const [formula, setFormula] = useState("")
-  const [result, setResult] = useState("")
-
-  const onChange = (string: string) => {
-    if(string === "C") {
-      setFormula("")
-      setResult("")
-      return
-    }
-    if(string === "="){
-      try {
-        const result = calculate(formula)
-        setResult(result.toString())
-      } catch (error) {
-        setResult("ERROR")
-      }
-    } else {
-      const value = formula + string
-      setFormula(value)
-    }
-    quack()
-  }
-
-  const quack = async () => {
-    const { sound } = await Audio.Sound.createAsync(require('./src/assets/quack.mp3'))
-    await sound.playAsync()
-  }
+  const { formula, result, onChange } = useCalc()
 
   return (
     <SafeAreaView style={styles.safe}>
